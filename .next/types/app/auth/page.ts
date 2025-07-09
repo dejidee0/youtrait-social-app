@@ -1,4 +1,4 @@
-// File: C:\Users\DAYO\Downloads\youtrait new\project\app\auth\page.jsx
+// File: C:\Users\D\Desktop\CodewithMonk\Youtrait\youtrait-social\app\auth\page.jsx
 import * as entry from '../../../../app/auth/page.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
