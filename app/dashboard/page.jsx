@@ -5,9 +5,16 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useAuthStore, useTraitsStore, useNotificationsStore, useStatsStore } from '@/lib/store'
 import { auth, traits, notifications } from '@/lib/supabase'
+import { useRealtime } from '@/lib/realtime'
 import { GlowButton } from '@/components/ui/glow-button'
 import { TraitCloud } from '@/components/trait-cloud'
 import { TraitApprovalInbox } from '@/components/trait-approval-inbox'
+import { BestieSystem } from '@/components/bestie-system'
+import { AITraitSuggestions } from '@/components/ai-trait-suggestions'
+import { WordBattleRoyale } from '@/components/word-battle-royale'
+import { TraitDNAProfile } from '@/components/trait-dna-profile'
+import { TraitStories } from '@/components/trait-stories'
+import { FloatingNotifications } from '@/components/floating-notifications'
 import { 
   User, 
   Sparkles, 
@@ -18,7 +25,10 @@ import {
   Settings,
   Plus,
   Crown,
-  Zap
+  Zap,
+  Brain,
+  Trophy,
+  Play
 } from 'lucide-react'
 
 export default function DashboardPage() {
@@ -30,6 +40,7 @@ export default function DashboardPage() {
   const { traits: userTraits, setTraits } = useTraitsStore()
   const { notifications: userNotifications, unreadCount } = useNotificationsStore()
   const { stats, setStats } = useStatsStore()
+  const { initialize, disconnect } = useRealtime()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -40,10 +51,16 @@ export default function DashboardPage() {
       }
       setUser(user)
       await loadDashboardData(user.id)
+      initialize() // Initialize realtime connections
       setLoading(false)
     }
 
     checkAuth()
+    
+    // Cleanup realtime connections on unmount
+    return () => {
+      disconnect()
+    }
   }, [])
 
   const loadDashboardData = async (userId) => {
@@ -92,7 +109,12 @@ export default function DashboardPage() {
 
   const tabs = [
     { id: 'cloud', label: 'Trait Cloud', icon: Sparkles },
+    { id: 'ai', label: 'AI Suggestions', icon: Brain },
     { id: 'inbox', label: 'Approval Inbox', icon: Bell, badge: unreadCount },
+    { id: 'battle', label: 'Battle Royale', icon: Trophy },
+    { id: 'stories', label: 'Stories', icon: Play },
+    { id: 'besties', label: 'Besties', icon: Heart },
+    { id: 'dna', label: 'DNA Profile', icon: Zap },
     { id: 'stats', label: 'Stats', icon: TrendingUp },
     { id: 'profile', label: 'Profile', icon: User }
   ]
@@ -264,6 +286,18 @@ export default function DashboardPage() {
             </div>
           )}
 
+          {activeTab === 'ai' && (
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">AI Trait Suggestions</h2>
+                <div className="text-sm text-gray-400">
+                  Powered by your profile & activity
+                </div>
+              </div>
+              <AITraitSuggestions />
+            </div>
+          )}
+
           {activeTab === 'inbox' && (
             <div className="p-8">
               <div className="flex items-center justify-between mb-6">
@@ -273,6 +307,36 @@ export default function DashboardPage() {
                 </div>
               </div>
               <TraitApprovalInbox />
+            </div>
+          )}
+
+          {activeTab === 'battle' && (
+            <div className="p-8">
+              <WordBattleRoyale />
+            </div>
+          )}
+
+          {activeTab === 'stories' && (
+            <div className="p-8">
+              <TraitStories />
+            </div>
+          )}
+
+          {activeTab === 'besties' && (
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">Bestie System</h2>
+                <div className="text-sm text-gray-400">
+                  Connect with your special friend
+                </div>
+              </div>
+              <BestieSystem />
+            </div>
+          )}
+
+          {activeTab === 'dna' && (
+            <div className="p-8">
+              <TraitDNAProfile />
             </div>
           )}
 
@@ -395,6 +459,9 @@ export default function DashboardPage() {
           )}
         </motion.div>
       </div>
+      
+      {/* Floating Notifications */}
+      <FloatingNotifications />
     </div>
   )
 }

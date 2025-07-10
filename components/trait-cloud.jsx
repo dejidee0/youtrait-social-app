@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { TraitBubble } from '@/components/ui/trait-bubble'
 import { GlowButton } from '@/components/ui/glow-button'
+import { TraitReactions } from '@/components/trait-reactions'
 import { Plus, Search, Filter } from 'lucide-react'
 
 export function TraitCloud({ traits = [] }) {
@@ -149,11 +150,19 @@ export function TraitCloud({ traits = [] }) {
                 transform: `translate(${trait.x}px, ${trait.y}px)`
               }}
             >
-              <TraitBubble 
-                trait={trait}
-                onUpvote={handleUpvote}
-                onClick={() => console.log('Trait clicked:', trait)}
-              />
+              <div className="relative">
+                <TraitBubble 
+                  trait={trait}
+                  onUpvote={handleUpvote}
+                  onClick={() => console.log('Trait clicked:', trait)}
+                />
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                  <TraitReactions 
+                    traitId={trait.id}
+                    existingReactions={trait.reactions || []}
+                  />
+                </div>
+              </div>
             </motion.div>
           ))}
 

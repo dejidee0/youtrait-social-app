@@ -1,4 +1,4 @@
-// File: C:\Users\D\Desktop\CodewithMonk\Youtrait\youtrait-social\app\layout.jsx
+// File: C:\Users\DAYO\Documents\ART WORKS PROJECTS\youtrait-social-app\app\layout.jsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

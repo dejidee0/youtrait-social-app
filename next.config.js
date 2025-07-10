@@ -9,6 +9,7 @@ const nextConfig = {
   },
   webpack(config) {
     config.module.exprContextCritical = false;
+    config.cache = false; 
     return config;
   },
 };
