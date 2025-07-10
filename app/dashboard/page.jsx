@@ -277,7 +277,15 @@ export default function DashboardPage() {
             <div className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-white">Your Trait Cloud</h2>
-                <GlowButton size="sm">
+                <GlowButton 
+                  size="sm"
+                  onClick={() => {
+                    // Show trait request modal or navigate to trait request page
+                    window.dispatchEvent(new CustomEvent('floatingNotification', {
+                      detail: { message: 'Trait request feature coming soon!', type: 'info' }
+                    }))
+                  }}
+                >
                   <Plus className="w-4 h-4" />
                   Add Trait
                 </GlowButton>
@@ -448,7 +456,13 @@ export default function DashboardPage() {
                     </div>
                     
                     <div className="flex justify-end">
-                      <GlowButton>
+                      <GlowButton
+                        onClick={() => {
+                          window.dispatchEvent(new CustomEvent('floatingNotification', {
+                            detail: { message: 'Profile updated successfully!', type: 'success' }
+                          }))
+                        }}
+                      >
                         Save Changes
                       </GlowButton>
                     </div>

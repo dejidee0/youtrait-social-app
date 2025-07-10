@@ -2,12 +2,14 @@
 
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 export function GlowButton({ 
   children, 
   className, 
   variant = 'primary',
   size = 'md',
+  href,
   disabled = false,
   loading = false,
   onClick,
@@ -27,8 +29,51 @@ export function GlowButton({
     xl: 'px-10 py-5 text-xl'
   }
 
+  const ButtonComponent = motion.button
+  const LinkComponent = motion.div
+  
+  const buttonContent = (
+    <>
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+      
+      {/* Shimmer effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer" />
+      </div>
+      
+      {/* Content */}
+      <span className="relative z-10 flex items-center gap-2">
+        {loading ? (
+          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        ) : null}
+        {children}
+      </span>
+    </>
+  )
+
+  if (href) {
+    return (
+      <Link href={href}>
+        <LinkComponent
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className={cn(
+            baseClasses,
+            variants[variant],
+            sizes[size],
+            className
+          )}
+          {...props}
+        >
+          {buttonContent}
+        </LinkComponent>
+      </Link>
+    )
+  }
+
   return (
-    <motion.button
+    <ButtonComponent
       whileHover={{ scale: disabled ? 1 : 1.02 }}
       whileTap={{ scale: disabled ? 1 : 0.98 }}
       className={cn(
@@ -39,20 +84,8 @@ export function GlowButton({
         sizes[size],
         className
       )}
-      disabled={disabled || loading}
-      onClick={onClick}
-      {...props}
     >
-      <span className="relative z-10 flex items-center justify-center gap-2">
-        {loading && (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
-          />
-        )}
-        {children}
-      </span>
-    </motion.button>
+      {buttonContent}
+    </ButtonComponent>
   )
 }
